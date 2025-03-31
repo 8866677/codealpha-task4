@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Music Player</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(to right, #ff7e5f, #feb47b);
+        text-align: center;
+        color: white;
+        overflow: hidden;
+      }
+      .navbar {
+        background: rgba(0, 0, 0, 0.8);
+        padding: 15px;
+        font-size: 24px;
+        animation: slideIn 1s ease-in-out;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .container {
+        margin-top: 50px;
+        padding: 20px;
+        animation: fadeIn 1.5s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      select {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+      }
+      .song-list {
+        margin-top: 20px;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+      }
+      .song-item {
+        padding: 10px;
+        margin: 5px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+        width: 50%;
+        display: flex;
+        justify-content: space-between;
+      }
+      .song-item:hover {
+        background: rgba(255, 255, 255, 0.4);
+      }
+      .controls {
+        margin-top: 20px;
+        display: none;
+      }
+      button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background: #ff6b6b;
+        color: white;
+        margin: 5px;
+        transition: 0.3s;
+      }
+      button:hover {
+        background: #ff3b3b;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <h1>🎵 Music Player</h1>
+    </nav>
+
+    <div class="container">
+      <h2>Welcome to Music Player</h2>
+      <p>
+        Enjoy your favorite music in different languages. Select your preferred
+        language and explore a vast collection of songs.
+      </p>
+
+      <h2>Select Your Language</h2>
+      <select id="languageSelect" onchange="loadSongs()">
+        <option value="">-- Select Language --</option>
+        <option value="hindi">Hindi</option>
+        <option value="english">English</option>
+        <option value="bhojpuri">Bhojpuri</option>
+      </select>
+
+      <div id="songList" class="song-list"></div>
+
+      <div class="controls">
+        <button onclick="prevSong()">⏮️ Previous</button>
+        <button onclick="playPause()">▶️ Play/Pause</button>
+        <button onclick="nextSong()">⏭️ Next</button>
+        <button onclick="markFavorite()">❤️ Favorite</button>
+      </div>
+    </div>
+
+    <audio id="audioPlayer" controls></audio>
+
+    <script>
+      let songs = {
+        hindi: ["m1.mp3", "m2.mp3", "m3.mp3", "m4.mp3", "m5.mp3"],
+        english: ["m1.mp3", "m2.mp3", "m3.mp3", "m4.mp3", "m5.mp3"],
+        bhojpuri: ["m1.mp3", "m2.mp3", "m3.mp3", "m4.mp3", "m5.mp3"],
+      };
+      let currentSongs = [];
+      let currentIndex = 0;
+      let audioPlayer = document.getElementById("audioPlayer");
+
+      function loadSongs() {
+        let lang = document.getElementById("languageSelect").value;
+        let songListDiv = document.getElementById("songList");
+        let controlsDiv = document.querySelector(".controls");
+        if (lang) {
+          currentSongs = songs[lang];
+          songListDiv.innerHTML = "";
+          currentSongs.forEach((song, index) => {
+            let songItem = document.createElement("div");
+            songItem.classList.add("song-item");
+            songItem.innerHTML = `${song} <button onclick='playSong(${index})'>▶️ Play</button>`;
+            songListDiv.appendChild(songItem);
+          });
+          songListDiv.style.display = "flex";
+          controlsDiv.style.display = "block";
+        } else {
+          songListDiv.style.display = "none";
+          controlsDiv.style.display = "none";
+        }
+      }
+      function playSong(index) {
+        currentIndex = index;
+        audioPlayer.src = currentSongs[currentIndex];
+        audioPlayer.play();
+      }
+      function playPause() {
+        if (audioPlayer.paused) {
+          audioPlayer.play();
+        } else {
+          audioPlayer.pause();
+        }
+      }
+      function nextSong() {
+        if (currentIndex < currentSongs.length - 1) {
+          playSong(++currentIndex);
+        }
+      }
+      function prevSong() {
+        if (currentIndex > 0) {
+          playSong(--currentIndex);
+        }
+      }
+      function markFavorite() {
+        alert("Marked as Favorite!");
+      }
+    </script>
+  </body>
+</html>
